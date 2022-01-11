@@ -14,22 +14,36 @@ impl Config {
     // fn parse_config(args: &[String]) -> (&str, &str) {
     // fn parse_config(args: &[String]) -> Config {
     // fn new(args: &[String]) -> Config {
-    pub fn new(args: &[String]) -> Result<Config, &'static str> {
+    // pub fn new(args: &[String]) -> Result<Config, &'static str> {
+    pub fn new(mut args: std::env::Args) -> Result<Config, &'static str> {
+        // Skip first index
+        args.next(); // index 0
+
         // Error handling
-        if args.len() < 3 {
-            // Throw exception
-            // panic! macro also ends the program immediately
-            // panic!("Not enough arguments");
-            return Err("Not enough arguments");
-        }
+        // if args.len() < 3 {
+        // Throw exception
+        // panic! macro also ends the program immediately
+        // panic!("Not enough arguments");
+        // return Err("Not enough arguments");
+        // }
 
         // args always take the pwd on where the file is currently
         // being called so we need to start from 1 to avoid this
         // reference
         // let query = &args[1];
-        let query = args[1].clone();
+        // let query = args[1].clone();
+        let query = match args.next() {
+            // index 1
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
         // let filename = &args[2];
-        let filename = args[2].clone();
+        // let filename = args[2].clone();
+        let filename = match args.next() {
+            // index 2
+            Some(arg) => arg,
+            None => return Err("Didn't get a file name"),
+        };
 
         let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
 
@@ -87,15 +101,19 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 // is the argument that should be connected to the return value
 // using the lifetime syntax.
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-
-    results
+    // let mut results = Vec::new();
+    //
+    // for line in contents.lines() {
+    //     if line.contains(query) {
+    //         results.push(line);
+    //     }
+    // }
+    //
+    // results
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {

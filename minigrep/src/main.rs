@@ -9,7 +9,7 @@ fn main() {
     // Although we very rarely need to annotate types in Rust,
     // collect is one function we often do need to annotate because
     // Rust isn't able to infer the kind of collection we want.
-    let args: Vec<String> = env::args().collect();
+    // let args: Vec<String> = env::args().collect();
 
     // let (query, filename) = parse_config(&args);
     // let config = parse_config(&args);
@@ -20,7 +20,7 @@ fn main() {
     // value, this method calls the code in the closure, which is an
     // anonymous functions we define and pass as an argument to
     // unwrap_or_else.
-    let config = Config::new(&args).unwrap_or_else(|err| {
+    let config = Config::new(env::args()).unwrap_or_else(|err| {
         // println!("Problem parsing arguments: {}", err);
         // This prints stderr instead of stdout, easily to
         // be catch
